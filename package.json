@@ -20,6 +20,6 @@
         "vite": "^3.0.0"
     },
     "dependencies": {
-        "react-router-dom": "^6.18.0"
+        "react-router-dom": "^5.3.4"
     }
 }

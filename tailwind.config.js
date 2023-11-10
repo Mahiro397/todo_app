@@ -6,6 +6,7 @@ export default {
         "./resources/js/pages/**/*.jsx",
 
 
+
   ],
   theme: {
     extend: {},

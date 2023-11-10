@@ -1,5 +1,6 @@
-import React from 'react';
-import ReactDOM from 'react-dom';
+
+/*import React from 'react';
+import ReactDOM from 'react-dom/client';
 import {
     BrowserRouter,
     Route,
@@ -13,6 +14,7 @@ import Example from './pages/Example';
             <Switch>
                 <Route path='/example' exact component={Example} />
             </Switch>
+
         </div>
     );
 }
@@ -22,4 +24,6 @@ import Example from './pages/Example';
       <App />
     </BrowserRouter>
   ), document.getElementById('app'))
+  
 
+*/
