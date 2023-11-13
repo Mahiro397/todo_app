@@ -1,7 +1,7 @@
 import React from 'react';
 import ReactDOM from 'react-dom/client';
 import About from './About';
-import Contact from './Contact';
+import Contact from './MainTable';
 import Home from './Home';
 import { BrowserRouter, Route } from 'react-router-dom';
 
