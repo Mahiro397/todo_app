@@ -2,8 +2,9 @@ import React from 'react';
 import ReactDOM from 'react-dom/client';
 import About from './About';
 import Contact from './MainTable';
-import Home from './Home';
 import { BrowserRouter, Route } from 'react-router-dom';
+import Top from './Top';
+import Home from './Home';
 
 
 function Example() {
@@ -11,6 +12,9 @@ function Example() {
         <BrowserRouter>
         <Route exact path="/">
         <Home />
+      </Route>
+        <Route exact path="/top">
+        <Top />
       </Route>
       <Route path="/about">
         <About />
