@@ -17,6 +17,9 @@ use Illuminate\Support\Facades\Route;
 Route::group(['middleware' => 'api'], function(){
     Route::get('posts', 'App\Http\Controllers\Api\PostController@index');
     Route::post('post/create', 'App\Http\Controllers\Api\PostController@create');
+    Route::post('edit', 'App\Http\Controllers\Api\PostController@edit'); 
+    Route::put('/posts/{id}', 'App\Http\Controllers\Api\PostController@update');
+    Route::delete('/posts/{id}', 'App\Http\Controllers\Api\PostController@delete');
 });
 
 //Route::middleware('auth:sanctum')->get('/user', function (Request $request) {

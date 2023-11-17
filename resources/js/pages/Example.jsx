@@ -1,10 +1,12 @@
 import React from 'react';
 import ReactDOM from 'react-dom/client';
 import About from './About';
-import Contact from './MainTable';
+import Contact from '../components/MainTable';
 import { BrowserRouter, Route } from 'react-router-dom';
 import Top from './Top';
 import Home from './Home';
+import Calendar from './CalendarPage';
+import EditBtn from '../components/EditBtn';
 
 
 function Example() {
@@ -19,9 +21,10 @@ function Example() {
       <Route path="/about">
         <About />
       </Route>
-      <Route path="/contact">
-        <Contact />
+      <Route exact path="/calender" >
+        <Calendar />
       </Route>
+      <Route path="/edit/:id" component={EditBtn} />
     </BrowserRouter>
     );
 }
@@ -40,5 +43,6 @@ if (document.getElementById('app')) {
       <React.StrictMode>
            <Example/>
        </React.StrictMode>
+       
    )
 }

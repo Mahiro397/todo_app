@@ -1,9 +1,15 @@
 // src/components/Modal.js
-
 import { Fragment, useState } from 'react';
 import { Dialog, Transition } from '@headlessui/react';
+import axios from 'axios'; 
+
 
 const Modal = ({ isOpen, closeModal, children }) => {
+     
+
+
+
+
   return (
     <Transition show={isOpen} as={Fragment}>
       <Dialog

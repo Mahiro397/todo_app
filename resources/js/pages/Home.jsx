@@ -1,6 +1,8 @@
 import React from 'react'
 
 const Home = () => {
+
+ 
   return (
     <>
     <section class="flex items-center justify-center min-h-screen bg-white">
