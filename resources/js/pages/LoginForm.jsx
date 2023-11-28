@@ -72,7 +72,7 @@ function LoginForm({ setLoggedIn }) {
      setLoggedIn(false); // エラーが発生した場合はログイン状態をfalseに設定します
     }
   };
-// コンポーネントのマウント時にログイン状態をチェック
+// コンポーネントのマウント時にログイン状態をチェックあああ
 useEffect(() => {
   checkLoginStatus();
 }, []);
