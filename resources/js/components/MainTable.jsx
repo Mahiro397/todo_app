@@ -1,8 +1,6 @@
 import React, { useState, useEffect } from 'react';
 import axios from 'axios';
 import StateBtn from './StateBtn';
-import DeleteBtn from './DeleteBtn';
-import EditBtn from './EditBtn';
 import Modal from './Modal';
 import PostFrom from './PostFrom';
 
@@ -11,14 +9,60 @@ function MainTable() {
   const [posts, setPosts] = useState([]);
   //編集ボタンをクリックしたときのモーダルの状態を管理useState
   const [modalOpen, setModalOpen] = useState(false);
-
   //タスクを選択して編集ボタンをクリックし編集ファームを表示した際に、選択したタスクのデータをファームのバリューに設定するためのuseState。
-  const [editData, setEditData] = useState({id:" ",task_name: '',content: '',deadline: '',priority: '',});
-
+  const [editData, setEditData] = useState({ id: " ", task_name: '', content: '', deadline: '', priority: '', status: "", });
   //削除
-  const [deleteData, setdeletData] = useState({id:" ",task_name: '',content: '',deadline: '',priority: '',});
+  const [deleteData, setdeletData] = useState({ id: " ", task_name: '', content: '', deadline: '', priority: '', status: "", });
 
-  //Laravelの方で飛ばしてAPIを取得する。取得したデータをsetEditDataにセットする。キャッチに失敗したらエラー文。
+  const [sortingCriteria, setSortingCriteria] = useState('default');
+
+  const buttonColor = (status) =>{
+    if(status == "未着手"){
+      return 'bg-purple-400';
+    }else if(status == "作業中"){
+      return 'bg-yellow-500 ';
+    }else if(status == "完了"){
+      return 'bg-green-500 ';
+    }else{
+      return 'bg-blue-500 ';
+    }
+
+}
+
+
+  // sessionStorageにソート基準を設定する関数
+  const setSortCriteria = (criteria) => {
+    sessionStorage.setItem('sortingCriteria', criteria);
+  };
+
+  // sessionStorageからソート基準を取得する関数
+  const getSortCriteria = () => {
+    return sessionStorage.getItem('sortingCriteria') || 'default'; // 設定されていない場合はデフォルトのソート基準を使用
+  };
+
+  // タスク名でソートする関数
+  const sortByName = () => {
+    const sortedPosts = [...posts].sort((a, b) => a.task_name.localeCompare(b.task_name));
+    setPosts(sortedPosts);
+    setSortCriteria('name');
+  };
+
+  // 期限でソートする関数
+  const sortByDeadline = () => {
+    const sortedPosts = [...posts].sort((a, b) => new Date(a.deadline) - new Date(b.deadline));
+    setPosts(sortedPosts);
+    setSortCriteria('deadline');
+  };
+
+  // 優先度でソートする関数
+  const sortByPriority = () => {
+    const sortedPosts = [...posts].sort((a, b) => a.priority - b.priority);
+    setPosts(sortedPosts);
+    setSortCriteria('priority');
+  };
+
+
+  //Laravelの方で飛ばしたAPIを取得する。取得したデータをsetEditDataにセットする。キャッチに失敗したらエラー文。
   const readingApi = () => {
     axios
       .get('/api/posts')
@@ -30,7 +74,24 @@ function MainTable() {
       });
   };
 
+  //初回読み込み
   useEffect(() => {
+    const criteria = getSortCriteria();
+    switch (criteria) {
+      case 'name':
+        sortByName();
+        break;
+      case 'deadline':
+        sortByDeadline();
+        break;
+      case 'priority':
+        sortByPriority();
+        break;
+      default:
+        // デフォルトのソート基準
+        break;
+    }
+
     readingApi();
   }, []);
 
@@ -40,7 +101,7 @@ function MainTable() {
       .put(`/api/posts/${editData.id}`, editData)
       .then(response => {
         console.log('編集が成功しました', response.data);
-        
+
       })
       .catch(error => {
         console.error('編集中にエラーが発生しました', error);
@@ -61,17 +122,18 @@ function MainTable() {
         // エラー時の処理を記述
       });
   };
- 
 
-  //クリックしたら削除処理
 
-  const delteBtnClick = (post) =>{
-    const deleteBtnDate ={
-      id:post.id,
+  //削除ボタンをクリックしたらララベルで飛ばしたApiから受け取ったタスクのオブジェクトデータpostsを下の行のマップ関数で個別にわけたpostのデータを受け取りupdatedEditDataにいれてsetEditDataにセット。
+
+  const delteBtnClick = (post) => {
+    const deleteBtnDate = {
+      id: post.id,
       task_name: post.task_name,
       content: post.content,
       deadline: post.deadline,
       priority: post.priority,
+      status: post.status,
     }
     setdeletData(deleteBtnDate);
     const postId = post.id;
@@ -80,50 +142,61 @@ function MainTable() {
   }
 
   //モーダル開閉
-    //編集ボタンをクリックしたらモーダルが開きApiから受け取ったタスクのオブジェクトデータpostsを下の行のマップ関数で個別にわけたpostのデータを受け取りupdatedEditDataにいれてsetEditDataにセット。
+  //編集ボタンをクリックしたらモーダルが開き、ララベルで飛ばしたApiから受け取ったタスクのオブジェクトデータpostsを下の行のマップ関数で個別にわけたpostのデータを受け取りupdatedEditDataにいれてsetEditDataにセット。
 
-    const openModal = (post) => { 
-      //console.log(post);
-      const updatedEditData = {
-        id:post.id,
-        task_name: post.task_name,
-        content: post.content,
-        deadline: post.deadline,
-        priority: post.priority,
-      };
-      setEditData(updatedEditData);
-      //console.log(editData);
-      setModalOpen(true);
+  const openModal = (post) => {
+    //console.log(post);
+    const updatedEditData = {
+      id: post.id,
+      task_name: post.task_name,
+      content: post.content,
+      deadline: post.deadline,
+      priority: post.priority,
+      status: post.status,
     };
-    const closeModal = () => {
-      setModalOpen(false);
-    };
+    setEditData(updatedEditData);
+    //console.log(editData);
+    setModalOpen(true);
+  };
+  const closeModal = () => {
+    setModalOpen(false);
+  };
 
-  
-//タスクテーブルのヘッダーの項目を配列に入れてマップ関数で振り分けるための配列。
+
+  //タスクテーブルのヘッダーの項目を配列に入れてマップ関数で振り分けるための配列。
 
   const headerList = ['名前', 'タスク内容', '期限日', '優先度', '編集', '作業状態', '削除'];
 
-//Apiから受け取ったタスクのオブジェクトデータpostsをマップ関数でpostに個別に振り分ける。
+  //Apiから受け取ったタスクのオブジェクトデータpostsをマップ関数でpostに個別に振り分ける。
   const rows = posts.map(post => ({
     name: post.task_name,
     content: post.content,
     date: post.deadline,
     priority: post.priority,
-    editBtn: (<button className="bg-blue-500 hover:bg-blue-700 text-white font-bold py-2 px-4 rounded" onClick={() => openModal(post)} >編集</button> ),
-    stateBtn:<StateBtn/> ,
-    deleteBtn:( <button className="bg-red-500 hover:bg-red-700 text-white font-bold py-2 px-4 rounded"onClick={() => delteBtnClick(post)}>削除</button>),
+    editBtn: (<button className="bg-blue-500 hover:bg-blue-700 text-white font-bold py-2 px-4 rounded" onClick={() => openModal(post)} >編集</button>),
+    stateBtn: (<button className={`text-white font-bold py-2 px-4 rounded ${buttonColor(post.status)}`} >{post.status}</button>),
+    deleteBtn: (<button className="bg-red-500 hover:bg-red-700 text-white font-bold py-2 px-4 rounded" onClick={() => delteBtnClick(post)}>削除</button>),
   }));
 
+ 
 
   return (
     <>
-     
+
       <thead className="bg-green-800 text-white">
         <tr>
           {headerList.map((item, index) => (
             <th key={index} className="py-2 px-4 text-center">
-              {item}
+              {/* Add sorting functionality to the header items */}
+              {item === '名前' ? (
+                <button onClick={sortByName}>{item}</button>
+              ) : item === '期限日' ? (
+                <button onClick={sortByDeadline}>{item}</button>
+              ) : item === '優先度' ? (
+                <button onClick={sortByPriority}>{item}</button>
+              ) : (
+                item
+              )}
             </th>
           ))}
         </tr>
@@ -142,53 +215,64 @@ function MainTable() {
           </tr>
         ))}
       </tbody>
-      
 
-       <Modal isOpen={modalOpen} closeModal={closeModal}>
-        
+
+      <Modal isOpen={modalOpen} closeModal={closeModal}>
+
         <form className="flex flex-col space-y-4" >
-            <textarea
-                id="task_name"
-                name="task_name"
-                placeholder="タスク名"
-                className="border rounded-md p-2 outline-none"
-                value={editData.task_name}
-                onChange={(e) => setEditData({ ...editData, task_name: e.target.value })}
-                
-            ></textarea>
-            <textarea
-                id="content"
-                name="content"
-                placeholder="内容"
-                className="border rounded-md p-2 outline-none"
-                value={editData.content}
-                onChange={(e) => setEditData({ ...editData, content: e.target.value })}
-            ></textarea>
-            <textarea
-                id="deadline"
-                name="deadline"
-                placeholder="期限日"
-                className="border rounded-md p-2 outline-none"
-                value={editData.deadline}
-                onChange={(e) => setEditData({ ...editData, deadline: e.target.value })}
-            ></textarea>
-            <textarea
-                id="priority"
-                name="priority"
-                placeholder="優先度"
-                className="border rounded-md p-2 outline-none"
-                value={editData.priority}
-                onChange={(e) => setEditData({ ...editData, priority: e.target.value })}
-            ></textarea>
-            <button type="submit" className="mt-4 bg-gray-300 p-2" onClick={() => {updatePost();closeModal(); }}>
-                更新
-            </button>
+          <textarea
+            id="task_name"
+            name="task_name"
+            placeholder="タスク名"
+            className="border rounded-md p-2 outline-none"
+            value={editData.task_name}
+            onChange={(e) => setEditData({ ...editData, task_name: e.target.value })}
+
+          ></textarea>
+          <textarea
+            id="content"
+            name="content"
+            placeholder="内容"
+            className="border rounded-md p-2 outline-none"
+            value={editData.content}
+            onChange={(e) => setEditData({ ...editData, content: e.target.value })}
+          ></textarea>
+          <textarea
+            id="deadline"
+            name="deadline"
+            placeholder="期限日"
+            className="border rounded-md p-2 outline-none"
+            value={editData.deadline}
+            onChange={(e) => setEditData({ ...editData, deadline: e.target.value })}
+          ></textarea>
+          <textarea
+            id="priority"
+            name="priority"
+            placeholder="優先度"
+            className="border rounded-md p-2 outline-none"
+            value={editData.priority}
+            onChange={(e) => setEditData({ ...editData, priority: e.target.value })}
+          ></textarea>
+          <select
+            id="status"
+            name="status"
+            className="border rounded-md p-2 outline-none"
+            value={editData.status}
+            onChange={(e) => setEditData({ ...editData, status: e.target.value })}
+          >
+            <option value="未着手">未着手</option>
+            <option value="作業中">作業中</option>
+            <option value="完了">完了</option>
+          </select>
+          <button type="submit" className="mt-4 bg-gray-300 p-2" onClick={() => { updatePost(); closeModal(); }}>
+            更新
+          </button>
         </form>
-      
+
       </Modal>
 
     </>
-    
+
   );
 }
 

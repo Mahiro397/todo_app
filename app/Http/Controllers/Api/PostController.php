@@ -11,20 +11,32 @@ class PostController extends Controller
     // postの一覧を表示する
     public function index()
     {
-        $posts = Post::all();
+        $posts = Post::where('user_id',\Auth::id())->get();
         return response()->json($posts, 200);
     }
 
+   // public function sortDeadline()
+   // {
+   //     $posts = Post::orderByDeadline()->get();
+   //     return response()->json($posts, 200);
+   // }
+
     public function create(Request $request)
+
     {
+        $userId = \Auth::id();
         $post = new Post;
         $post->task_name = $request->task_name;
         $post->content = $request->content;
         $post->deadline = $request->deadline;
         $post->priority = $request->priority;
+        $post->status = $request->status;
+        $post->user_id = $userId;
         $post->save();
+
         return response()->json($posts, 200);
     }
+
 
     // 編集画面に遷移するためのアクション
     public function edit(Request $request)
@@ -37,12 +49,15 @@ class PostController extends Controller
 
    //データを更新するためのアクション
     public function update(Request $request)
+
     {
+        $userId = \Auth::id();
         $post = Post::find($request->id);
         $post->task_name = $request->task_name;
         $post->content = $request->content;
         $post->deadline = $request->deadline;
         $post->priority = $request->priority;
+        $post->status = $request->status;
         $post->save();
         $posts = Post::all();
         return $posts;

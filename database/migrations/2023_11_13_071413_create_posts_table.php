@@ -13,10 +13,12 @@ return new class extends Migration
     {
         Schema::create('posts', function (Blueprint $table) {
             $table->id();
+            $table->foreignId('user_id')->constrained()->onDelete('cascade');
             $table->string('task_name');
             $table->text('content');
             $table->date('deadline');
             $table->unsignedInteger('priority')->default(0);
+            $table->string('status');
             $table->timestamps();
         });
     }
@@ -26,6 +28,9 @@ return new class extends Migration
      */
     public function down(): void
     {
+        //Schema::table('posts', function (Blueprint $table) {
+        //    $table->dropForeign(['user_id']);
+        //});
         Schema::dropIfExists('posts');
     }
 };

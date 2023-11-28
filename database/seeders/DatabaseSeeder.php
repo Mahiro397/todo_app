@@ -20,7 +20,11 @@ class DatabaseSeeder extends Seeder
         // ]);
 
         $this->call([
-            PostsTableSeeder::class,    //追記する
+            
+            UserSeeder::class, 
+            PostsTableSeeder::class, 
+           
+
         ]);
     }
 }

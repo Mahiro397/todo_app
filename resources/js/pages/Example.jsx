@@ -1,31 +1,50 @@
-import React from 'react';
+import React, { useState} from 'react';
 import ReactDOM from 'react-dom/client';
 import About from './About';
 import Contact from '../components/MainTable';
-import { BrowserRouter, Route } from 'react-router-dom';
+import { BrowserRouter as Router, Route, Switch } from 'react-router-dom';
 import Top from './Top';
 import Home from './Home';
 import Calendar from './CalendarPage';
-import EditBtn from '../components/EditBtn';
+import LoginForm from './LoginForm';
+import PrivateRoute from '../components/PrivateRoute';
+import SignUp from './SignUp';
+import NotFound from './NotFound';
+
 
 
 function Example() {
+
+  const [loggedIn, setLoggedIn] = useState(false); // ログイン状態のステート
     return (
-        <BrowserRouter>
-        <Route exact path="/">
-        <Home />
-      </Route>
-        <Route exact path="/top">
-        <Top />
-      </Route>
-      <Route path="/about">
-        <About />
-      </Route>
-      <Route exact path="/calender" >
-        <Calendar />
-      </Route>
-      <Route path="/edit/:id" component={EditBtn} />
-    </BrowserRouter>
+      <Router>
+      <Switch>
+      <Route exact path="/about" component={About} />
+        <Route exact path="/" component={Home} />
+        <Route
+          exact
+          path="/signup"
+          render={(props) => <SignUp {...props} setLoggedIn={setLoggedIn} />}
+        />
+        <Route exact path="/login">
+          <LoginForm setLoggedIn={setLoggedIn} />
+        </Route>
+        <PrivateRoute
+          exact
+          path="/top"
+          component={Top}
+          loggedIn={loggedIn}
+          setLoggedIn={setLoggedIn}
+        />
+        <PrivateRoute
+          exact
+          path="/calendar"
+          component={Calendar}
+          loggedIn={loggedIn}
+        />
+         <Route component={NotFound} />
+      </Switch>
+    </Router>
     );
 }
 

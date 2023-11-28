@@ -3,6 +3,7 @@ import axios from 'axios';
 import ReactDOM from 'react-dom';
 import { Link } from "react-router-dom";
 import PageaaButton from '../components/PageaaButton';
+import ModalButton from '../components/ModalButton';
 
 
 const CalendarPage = () => {
@@ -17,7 +18,7 @@ const CalendarPage = () => {
   const prevlast = new Date(year,month-1,0).getDate();
 
 //スケジュールのデータ
-const [schedules,setSche] = useState([])
+const [schedules,setSche] = useState([]);
 
 //画面読み込み時に、1度だけ起動
 useEffect(()=>{
