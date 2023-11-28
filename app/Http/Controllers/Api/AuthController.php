@@ -62,7 +62,20 @@ class AuthController extends Controller
             'name' => 'required|string|max:255',
             'email' => 'required|string|email|unique:users,email|max:255',
             'password' => 'required|string|min:8', 
+        ], [
+            'name.required' => '名前は必須項目です。',
+            'name.max' => '名前は255文字以内で入力してください。',
+            'email.required' => 'メールアドレスは必須項目です。',
+            'email.email' => '有効なメールアドレスを入力してください。',
+            'email.unique' => 'このメールアドレスは既に使用されています。',
+            'email.max' => 'メールアドレスは255文字以内で入力してください。',
+            'password.required' => 'パスワードは必須項目です。',
+            'password.min' => 'パスワードは少なくとも8文字以上で入力してください。',
         ]);
+
+    //    if ($validator->fails()) {
+    //        return response()->json(['errors' => $validator->errors()], 422);
+    //    }
 
        
         $user = User::create([

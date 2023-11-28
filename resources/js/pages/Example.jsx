@@ -1,6 +1,5 @@
 import React, { useState} from 'react';
 import ReactDOM from 'react-dom/client';
-import About from './About';
 import Contact from '../components/MainTable';
 import { BrowserRouter as Router, Route, Switch } from 'react-router-dom';
 import Top from './Top';
@@ -19,7 +18,6 @@ function Example() {
     return (
       <Router>
       <Switch>
-      <Route exact path="/about" component={About} />
         <Route exact path="/" component={Home} />
         <Route
           exact
