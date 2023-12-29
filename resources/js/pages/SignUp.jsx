@@ -52,15 +52,13 @@ function SignUp({ setLoggedIn }) {
             history.push('/login');
             alert('アカウントが作成されました。ログインしてください。');
 
-            // Perform necessary actions with the response data
+            // 応答データを使用して実行
         } catch (error) {
             console.log(error.response.data.message)                
             if (error.response.status === 422) {
                 setApiError(error.response.data.message);
             } else if (error.response && error.response.status === 401) {
-
-                // Handle unauthorized error separately if needed
-                // Set another error message or perform specific actions
+                
             } else {
                 setApiError("予期せぬエラーが発生しました。");
             }
@@ -74,21 +72,21 @@ function SignUp({ setLoggedIn }) {
                 withCredentials: true
             });
 
-            // '/api/user'というAPIエンドポイントがログインしている場合にユーザーデータを返すことを想定しています
+            // '/api/user'というAPIエンドポイントがログインしている場合にユーザーデータを返すことを想定
             if (response.data) {
 
-                setLoggedIn(true); // ログイン状態をtrueに設定します
+                setLoggedIn(true); // ログイン状態をtrueに設定
                 history.push('/top');
 
                 // console.log(response.data);
             } else {
-                setLoggedIn(false); // ログイン状態をfalseに設定します
+                setLoggedIn(false); // ログイン状態をfalseに設定
             }
         } catch (error) {
             //console.error('ログイン状態の確認中にエラーが発生しました:', error);
            // console.log(error.response)
     
-            setLoggedIn(false); // エラーが発生した場合はログイン状態をfalseに設定します
+            setLoggedIn(false); // エラーが発生した場合はログイン状態をfalse
         }
     };
     // コンポーネントのマウント時にログイン状態をチェック

@@ -11,6 +11,7 @@ class PostController extends Controller
     // postの一覧を表示する
     public function index()
     {
+        //現在のログイン中のユーザーidに関連するタスクだけ表示
         $posts = Post::where('user_id',\Auth::id())->get();
         return response()->json($posts, 200);
     }
@@ -24,6 +25,7 @@ class PostController extends Controller
     public function create(Request $request)
 
     {
+        
         $userId = \Auth::id();
         $post = new Post;
         $post->task_name = $request->task_name;

@@ -7,12 +7,17 @@ import ModalButton from '../components/ModalButton';
 
 
 const CalendarPage = () => {
+
+  //与えられた数字の前に０をつけて文字列の末尾から2文字を抽出する関数
   function zeroPadding(num){
     return ('0' + num).slice(-2);
 }
 
+//現在の年を取得するusestate
   const [year,setYear] = useState(new Date().getFullYear());
+  //現在の年を取得するusestate
   const [month,setMonth] = useState(new Date().getMonth()+1);
+  
   const calendar = createCalendear(year,month);
   const last = new Date(year,month,0).getDate();
   const prevlast = new Date(year,month-1,0).getDate();
@@ -62,6 +67,19 @@ schedules.map((post)=>
         setMonth(nextMonth)
       }
   }
+//
+  function createCalendear(year,month){
+    //
+    const first = new Date(year,month - 1,1).getDay()
+    console.log(first)
+
+    return [0,1,2,3,4,5].map((weekIndex) => {
+        return [0,1,2,3,4,5,6].map((dayIndex) => {
+            const day = dayIndex + 1 + weekIndex * 7
+            return day - first 
+        })
+    })
+    }
 
   return (
   
@@ -186,15 +204,6 @@ schedules.map((post)=>
 );
 }
 
-function createCalendear(year,month){
-const first = new Date(year,month - 1,1).getDay()
 
-return [0,1,2,3,4,5].map((weekIndex) => {
-    return [0,1,2,3,4,5,6].map((dayIndex) => {
-        const day = dayIndex + 1 + weekIndex * 7
-        return day - first 
-    })
-})
-}
 
 export default CalendarPage

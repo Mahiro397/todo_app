@@ -18,6 +18,7 @@ function LoginForm({ setLoggedIn }) {
       email: email,
       password: password
     };
+    
 
     try {
       const response = await axios.post('/api/login', credentials, {

@@ -20,7 +20,7 @@ class AuthController extends Controller
         if (Auth::attempt($credentials)) {
             $request->session()->regenerate();
 
-            $token = $request->user()->createToken('token-name')->plainTextToken;
+           // $token = $request->user()->createToken('token-name')->plainTextToken;
 
 
             //return Redirect::to('/top');
