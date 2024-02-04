@@ -18,11 +18,11 @@ function MainTable() {
  
 //statusの中身の状態によってボタンの色を変更する処理
   const buttonColor = (status) =>{
-    if(status == "未着手"){
+    if(status == "説明会"){
       return 'bg-purple-400';
-    }else if(status == "作業中"){
+    }else if(status == "ES"){
       return 'bg-yellow-500 ';
-    }else if(status == "完了"){
+    }else if(status == "面接"){
       return 'bg-green-500 ';
     }else{
       return 'bg-blue-500 ';
@@ -143,7 +143,7 @@ function MainTable() {
 
   //タスクテーブルのヘッダーの項目を配列に入れてマップ関数で振り分けるための配列。
 
-  const headerList = ['名前', 'タスク内容', '期限日', '優先度', '編集', '作業状態', '削除'];
+  const headerList = ['企業名', 'タスク内容', '期限日', '志望度', '編集', '状態', '削除'];
 
   //Apiから受け取ったタスクのオブジェクトデータpostsをマップ関数でpostに個別に振り分ける。
   const rows = posts.map(post => ({
@@ -250,9 +250,9 @@ function MainTable() {
             value={editData.status}
             onChange={(e) => setEditData({ ...editData, status: e.target.value })}
           >
-            <option value="未着手">未着手</option>
-            <option value="作業中">作業中</option>
-            <option value="完了">完了</option>
+            <option value="説明会">説明会</option>
+            <option value="ES">ES</option>
+            <option value="面接">面接</option>
           </select>
           <button type="submit" className="mt-4 bg-gray-300 p-2" onClick={() => { updatePost(); closeModal(); }}>
             更新
