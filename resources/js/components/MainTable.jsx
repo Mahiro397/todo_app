@@ -14,14 +14,15 @@ function MainTable() {
   //削除
   const [deleteData, setdeletData] = useState({ id: " ", task_name: '', content: '', deadline: '', priority: '', status: "", });
 
-  const [sortingCriteria, setSortingCriteria] = useState('default');
-
+  
+ 
+//statusの中身の状態によってボタンの色を変更する処理
   const buttonColor = (status) =>{
-    if(status == "未着手"){
+    if(status == "説明会"){
       return 'bg-purple-400';
-    }else if(status == "作業中"){
+    }else if(status == "ES"){
       return 'bg-yellow-500 ';
-    }else if(status == "完了"){
+    }else if(status == "面接"){
       return 'bg-green-500 ';
     }else{
       return 'bg-blue-500 ';
@@ -30,35 +31,27 @@ function MainTable() {
 }
 
 
-  // sessionStorageにソート基準を設定する関数
-  const setSortCriteria = (criteria) => {
-    sessionStorage.setItem('sortingCriteria', criteria);
-  };
+ 
 
-  // sessionStorageからソート基準を取得する関数
-  const getSortCriteria = () => {
-    return sessionStorage.getItem('sortingCriteria') || 'default'; // 設定されていない場合はデフォルトのソート基準を使用
-  };
+  
 
   // タスク名でソートする関数
   const sortByName = () => {
     const sortedPosts = [...posts].sort((a, b) => a.task_name.localeCompare(b.task_name));
-    setPosts(sortedPosts);
-    setSortCriteria('name');
+   
   };
 
   // 期限でソートする関数
   const sortByDeadline = () => {
     const sortedPosts = [...posts].sort((a, b) => new Date(a.deadline) - new Date(b.deadline));
-    setPosts(sortedPosts);
-    setSortCriteria('deadline');
+   
   };
 
   // 優先度でソートする関数
   const sortByPriority = () => {
     const sortedPosts = [...posts].sort((a, b) => a.priority - b.priority);
     setPosts(sortedPosts);
-    setSortCriteria('priority');
+    
   };
 
 
@@ -76,22 +69,7 @@ function MainTable() {
 
   //初回読み込み
   useEffect(() => {
-    const criteria = getSortCriteria();
-    switch (criteria) {
-      case 'name':
-        sortByName();
-        break;
-      case 'deadline':
-        sortByDeadline();
-        break;
-      case 'priority':
-        sortByPriority();
-        break;
-      default:
-        // デフォルトのソート基準
-        break;
-    }
-
+    sortByName();
     readingApi();
   }, []);
 
@@ -101,7 +79,7 @@ function MainTable() {
       .put(`/api/posts/${editData.id}`, editData)
       .then(response => {
         console.log('編集が成功しました', response.data);
-
+       
       })
       .catch(error => {
         console.error('編集中にエラーが発生しました', error);
@@ -165,7 +143,7 @@ function MainTable() {
 
   //タスクテーブルのヘッダーの項目を配列に入れてマップ関数で振り分けるための配列。
 
-  const headerList = ['名前', 'タスク内容', '期限日', '優先度', '編集', '作業状態', '削除'];
+  const headerList = ['企業名', 'タスク内容', '期限日', '志望度', '編集', '状態', '削除'];
 
   //Apiから受け取ったタスクのオブジェクトデータpostsをマップ関数でpostに個別に振り分ける。
   const rows = posts.map(post => ({
@@ -187,7 +165,7 @@ function MainTable() {
         <tr>
           {headerList.map((item, index) => (
             <th key={index} className="py-2 px-4 text-center">
-              {/* Add sorting functionality to the header items */}
+              
               {item === '名前' ? (
                 <button onClick={sortByName}>{item}</button>
               ) : item === '期限日' ? (
@@ -237,22 +215,34 @@ function MainTable() {
             value={editData.content}
             onChange={(e) => setEditData({ ...editData, content: e.target.value })}
           ></textarea>
-          <textarea
-            id="deadline"
-            name="deadline"
-            placeholder="期限日"
-            className="border rounded-md p-2 outline-none"
-            value={editData.deadline}
-            onChange={(e) => setEditData({ ...editData, deadline: e.target.value })}
-          ></textarea>
-          <textarea
-            id="priority"
-            name="priority"
-            placeholder="優先度"
-            className="border rounded-md p-2 outline-none"
-            value={editData.priority}
-            onChange={(e) => setEditData({ ...editData, priority: e.target.value })}
-          ></textarea>
+          
+          <input
+                id="deadline"
+                name="deadline"
+                placeholder="期限日"
+                type="date"
+                className="border rounded-md p-2 outline-none"
+                value={editData.deadline}
+                onChange={(e) => setEditData({ ...editData, deadline: e.target.value })}
+            />
+
+
+            <select
+                id="priority"
+                name="priority"
+                placeholder="優先度"
+                className="border rounded-md p-2 outline-none"
+                value={editData.priority}
+                onChange={(e) => setEditData({ ...editData, priority: e.target.value })}
+
+            >
+                <option value="1">1</option>
+                <option value="2">2</option>
+                <option value="3">3</option>
+                <option value="4">4</option>
+                <option value="5">5</option>
+            </select>
+
           <select
             id="status"
             name="status"
@@ -260,9 +250,9 @@ function MainTable() {
             value={editData.status}
             onChange={(e) => setEditData({ ...editData, status: e.target.value })}
           >
-            <option value="未着手">未着手</option>
-            <option value="作業中">作業中</option>
-            <option value="完了">完了</option>
+            <option value="説明会">説明会</option>
+            <option value="ES">ES</option>
+            <option value="面接">面接</option>
           </select>
           <button type="submit" className="mt-4 bg-gray-300 p-2" onClick={() => { updatePost(); closeModal(); }}>
             更新

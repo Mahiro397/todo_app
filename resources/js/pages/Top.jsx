@@ -23,14 +23,14 @@ function Top({ setLoggedIn }) {
                 //console.log(response.date);
                 history.push('/'); 
                 //console.log(setLoggedIn);
-                // perform any additional actions upon successful logout
+               // ログアウトが成功したら追加のアクションを実行
             } else {
                 console.error('ログアウトに失敗しました');
-                // handle logout failure
+              
             }
         } catch (error) {
             console.error('エラーが発生しました', error);
-            // handle other errors
+            
         }
     };
   

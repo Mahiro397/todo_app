@@ -1,15 +1,25 @@
 import React, { useState } from 'react';
 import axios from 'axios';
+import { set } from 'immutable';
 
 function PostFrom() {
 
     //登録処理
 
     //新規登録用データ配列
-    const [formData, setFormData] = useState({ task_name: '', content: '', deadline: '', priority: '', status: "未着手", });
-    const [countData,setcountData]= useState(1);
+    const [formData, setFormData] = useState({ task_name: '', content: '', deadline: '', priority: '1', status: "説明会", });
+    
+    const [countData, setcountData] = useState(0);
 
 
+
+    const increment = () => {
+        setcountData(countData + 1);
+    }
+
+    const decrement = () => {
+        setcountData(countData - 1);
+    }
 
     //入力値を一時保存
     const inputChange = (e) => {
@@ -54,7 +64,7 @@ function PostFrom() {
             <textarea
                 id="task_name"
                 name="task_name"
-                placeholder="タスク名"
+                placeholder="企業名"
                 className="border rounded-md p-2 outline-none"
                 onChange={inputChange}
             ></textarea>
@@ -65,35 +75,43 @@ function PostFrom() {
                 className="border rounded-md p-2 outline-none"
                 onChange={inputChange}
             ></textarea>
-            <textarea
+            <input
                 id="deadline"
                 name="deadline"
                 placeholder="期限日"
+                type="date"
                 className="border rounded-md p-2 outline-none"
                 onChange={inputChange}
-            ></textarea>
+            />
 
 
-
-
-            <textarea
+            <select
                 id="priority"
                 name="priority"
-                placeholder="優先度"
+                placeholder="志望度"
                 className="border rounded-md p-2 outline-none"
                 onChange={inputChange}
-            ></textarea>
+
+            >
+                <option hidden >志望度を選択してください</option>
+                <option value="1">1</option>
+                <option value="2">2</option>
+                <option value="3">3</option>
+                <option value="4">4</option>
+                <option value="5">5</option>
+            </select>
+
 
             <select
                 id="status"
                 name="status"
                 className="border rounded-md p-2 outline-none"
                 onChange={inputChange}
-               
+
             >
-            <option value="未着手">未着手</option>
-            <option value="作業中">作業中</option>
-            <option value="完了">完了</option>
+                <option value="説明会">説明会</option>
+                <option value="ES">ES</option>
+                <option value="面接">面接</option>
             </select>
 
             <button className="mt-4 bg-gray-300 p-2" onClick={createPost}>
